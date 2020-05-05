@@ -1,0 +1,321 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cs.ia;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+/**
+ *
+ * @author Ali Zain
+ */
+public class MainScreen extends javax.swing.JFrame {
+    public static Connection con = null;
+    public static Statement st = null;
+    public static ResultSet rs = null;
+    public static ResultSet res = null;
+    public static int update = 0;
+    public static String url = "jdbc:mysql://localhost:3306";
+    public static String user = "root";
+    public static String password = "";
+    
+    /**
+     * Creates new form MainScreen
+     * @throws java.sql.SQLException
+     */
+    public MainScreen() throws SQLException {
+        initComponents();
+        getMySQLConnection();
+    }
+    
+    //method to establish a connection to the database and return the connection
+    public static Connection getMySQLConnection() throws SQLException
+    {
+        //connecting to the database
+        con = DriverManager.getConnection(url, user, password);
+        st = con.createStatement();
+        //creating the database and its tables if it does not exist (i.e. first time running the program)
+        update = st.executeUpdate("CREATE DATABASE IF NOT EXISTS funds");
+        update = st.executeUpdate("CREATE TABLE IF NOT EXISTS funds.divisions "
+                + "(divisionCode INT(11) PRIMARY KEY, "
+                + "divisionName TEXT NOT NULL)");
+        update = st.executeUpdate("CREATE TABLE IF NOT EXISTS funds.banks "
+                + "(bankCode INT(11) PRIMARY KEY, "
+                + "bankName TEXT NOT NULL)");
+        update = st.executeUpdate("CREATE TABLE IF NOT EXISTS funds.fundsdetails "
+                + "(fundCode INT(11) AUTO_INCREMENT PRIMARY KEY, "
+                + "divCode INT(11) NOT NULL, "
+                + "dateRequested TEXT NOT NULL, "
+                + "dateArranged TEXT, "
+                + "bankCode INT(11) NOT NULL, "
+                + "bankNum CHAR(6) NOT NULL, "
+                + "iban CHAR(22) NOT NULL, "
+                + "USD DOUBLE, "
+                + "USDChange DOUBLE, "
+                + "EUR DOUBLE, "
+                + "EURChange DOUBLE, "
+                + "SAR DOUBLE, "
+                + "SARChange DOUBLE, "
+                + "purpose TEXT, "
+                + "complete BOOLEAN NOT NULL)");
+        update = st.executeUpdate("CREATE TABLE IF NOT EXISTS funds.costsmade "
+                + "(fundCodeP INT(11) AUTO_INCREMENT PRIMARY KEY, "
+                + "divCodeP INT(11) NOT NULL, "
+                + "dateRequestedP TEXT NOT NULL, "
+                + "dateArrangedP TEXT, "
+                + "USDP DOUBLE, "
+                + "EURP DOUBLE, "
+                + "SARP DOUBLE, "
+                + "completeP BOOLEAN NOT NULL)");
+        rs = st.executeQuery("SELECT * FROM funds.divisions");
+        if(!(rs.next()))
+        {
+            update = st.executeUpdate("INSERT INTO funds.divisions (divisionCode, divisionName) VALUES (1, 'BMW')");
+            update = st.executeUpdate("INSERT INTO funds.divisions (divisionCode, divisionName) VALUES (2, 'JLR')");
+            update = st.executeUpdate("INSERT INTO funds.divisions (divisionCode, divisionName) VALUES (3, 'Hyundai')");
+        }
+        res = st.executeQuery("SELECT * FROM funds.banks");
+        if(!(res.next()))
+        {
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (1, 'ALAWWAL')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (2, 'ANB')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (3, 'BSF')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (4, 'GIB')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (5, 'NCB')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (6, 'RAJHI')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (7, 'SABB')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (8, 'SABBUT')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (9, 'SAIB')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (10, 'SAMBA')");
+            update = st.executeUpdate("INSERT INTO funds.banks (bankCode, bankName) VALUES (11, 'SCB')");
+        }
+        return con;
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLManageFunds = new javax.swing.JLabel();
+        jBAddFunds = new javax.swing.JButton();
+        jBManageFunds = new javax.swing.JButton();
+        jLGeneralReports = new javax.swing.JLabel();
+        jBPendingRep = new javax.swing.JButton();
+        jBCostsRep = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLMainScreenLogo = new javax.swing.JLabel();
+        jLMainHeading = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 204, 255));
+
+        jLManageFunds.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
+        jLManageFunds.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLManageFunds.setText("Funds Management");
+
+        jBAddFunds.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jBAddFunds.setText("Funds Request");
+        jBAddFunds.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jBAddFundsFocusLost(evt);
+            }
+        });
+        jBAddFunds.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAddFundsActionPerformed(evt);
+            }
+        });
+
+        jBManageFunds.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jBManageFunds.setText("Manage Funds");
+        jBManageFunds.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBManageFundsActionPerformed(evt);
+            }
+        });
+
+        jLGeneralReports.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
+        jLGeneralReports.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLGeneralReports.setText("General Reports");
+
+        jBPendingRep.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jBPendingRep.setText("Pending Requests");
+        jBPendingRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBPendingRepActionPerformed(evt);
+            }
+        });
+
+        jBCostsRep.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jBCostsRep.setText("Disbursements");
+        jBCostsRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCostsRepActionPerformed(evt);
+            }
+        });
+
+        jLMainScreenLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cs/ia/download.png"))); // NOI18N
+
+        jLMainHeading.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLMainHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLMainHeading.setText("Funds Manager");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(310, 310, 310)
+                        .addComponent(jLMainHeading)
+                        .addGap(91, 91, 91)
+                        .addComponent(jLMainScreenLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 930, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(124, 124, 124)
+                                .addComponent(jBAddFunds))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addComponent(jBPendingRep, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(355, 355, 355)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jBManageFunds)
+                            .addComponent(jBCostsRep, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(356, 356, 356)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLManageFunds, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLGeneralReports, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLMainHeading))
+                    .addComponent(jLMainScreenLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jLManageFunds)
+                .addGap(41, 41, 41)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBManageFunds)
+                    .addComponent(jBAddFunds))
+                .addGap(76, 76, 76)
+                .addComponent(jLGeneralReports)
+                .addGap(44, 44, 44)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBPendingRep)
+                    .addComponent(jBCostsRep))
+                .addContainerGap(75, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+    
+    //add funds button
+    private void jBAddFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAddFundsActionPerformed
+            InputForFundsRequests toMakeFunds = new InputForFundsRequests();
+            toMakeFunds.setVisible(true); //this statement opens the panel
+    }//GEN-LAST:event_jBAddFundsActionPerformed
+    
+    private void jBAddFundsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jBAddFundsFocusLost
+
+    }//GEN-LAST:event_jBAddFundsFocusLost
+    //manage funds button
+    private void jBManageFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBManageFundsActionPerformed
+        try {
+            ManageFundsRequest manage = new ManageFundsRequest();
+            manage.setVisible(false);
+            manage.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null,
+                    ex);
+        }
+    }//GEN-LAST:event_jBManageFundsActionPerformed
+    //funds pending report
+    private void jBPendingRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPendingRepActionPerformed
+        Report1 pend = new Report1();
+        pend.setVisible(false);
+        pend.setVisible(true);
+    }//GEN-LAST:event_jBPendingRepActionPerformed
+    //costs made report
+    private void jBCostsRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCostsRepActionPerformed
+        Report2 costs = new Report2();
+        costs.setVisible(false);
+        costs.setVisible(true);
+    }//GEN-LAST:event_jBCostsRepActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MainScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MainScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MainScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new MainScreen().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBAddFunds;
+    private javax.swing.JButton jBCostsRep;
+    private javax.swing.JButton jBManageFunds;
+    private javax.swing.JButton jBPendingRep;
+    private javax.swing.JLabel jLGeneralReports;
+    private javax.swing.JLabel jLMainHeading;
+    private javax.swing.JLabel jLMainScreenLogo;
+    private javax.swing.JLabel jLManageFunds;
+    private javax.swing.JSeparator jSeparator1;
+    // End of variables declaration//GEN-END:variables
+}
